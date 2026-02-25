@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prof. Lafaiete - Sistema de Gerenciamento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: #1B4D3E;
+            color: white;
+            padding: 2rem 1rem;
+        }
+
+        .profile {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #2C5E4A;
+            margin-bottom: 2rem;
+        }
+
+        .profile-icon {
+            width: 100px;
+            height: 100px;
+            background: #7FB77E;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .profile h3 {
+            margin-bottom: 0.3rem;
+        }
+
+        .profile p {
+            color: #7FB77E;
+            font-size: 0.9rem;
+        }
+
+        .menu-item {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .menu-item:hover {
+            background: #2C5E4A;
+        }
+
+        .menu-item.active {
+            background: #7FB77E;
+            color: #1B4D3E;
+            font-weight: 500;
+        }
+
+        .menu-item i {
+            font-size: 1.2rem;
+        }
+
+        /* Conteúdo Principal */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .header h2 {
+            color: #1B4D3E;
+        }
+
+        .date {
+            color: #666;
+        }
+
+        /* Cards de Resumo */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: #7FB77E;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-info h4 {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+
+        .stat-info p {
+            color: #1B4D3E;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Formulários */
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            color: #1B4D3E;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #7FB77E;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #1B4D3E;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #7FB77E;
+        }
+
+        .btn {
+            background: #1B4D3E;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #7FB77E;
+        }
+
+        .btn-secondary {
+            background: #7FB77E;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        /* Tabelas */
+        .table-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #1B4D3E;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.3rem 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .edit-btn {
+            background: #7FB77E;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* Calendário Visual */
+        .calendar-visual {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .calendar-day-header {
+            background: #1B4D3E;
+            color: white;
+            padding: 0.5rem;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .calendar-day {
+            background: #f8f9fa;
+            padding: 0.5rem;
+            min-height: 80px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .calendar-day.today {
+            border: 2px solid #7FB77E;
+        }
+
+        .calendar-day-number {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+            color: #1B4D3E;
+        }
+
+        .calendar-event {
+            background: #7FB77E;
+            color: white;
+            padding: 0.2rem 0.3rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-top: 0.2rem;
+            cursor: pointer;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .quick-action-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 1px solid #e0e0e0;
+        }
+
+        .quick-action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .quick-action-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .quick-action-card h4 {
+            color: #1B4D3E;
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-action-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            color: #1B4D3E;
+        }
+
+        .close-modal {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="profile">
+                <div class="profile-icon">👨‍🏫</div>
+                <h3>Prof. Lafaiete Erkmann</h3>
+                <p>Biologia e Ciências</p>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem;">@lafa.bio</p>
+            </div>
+
+            <div class="menu-item active" onclick="showSection('dashboard')">
+                <i>📊</i> Dashboard
+            </div>
+            <div class="menu-item" onclick="showSection('horarios')">
+                <i>⏰</i> Horários
+            </div>
+            <div class="menu-item" onclick="showSection('eventos')">
+                <i>📅</i> Eventos
+            </div>
+            <div class="menu-item" onclick="showSection('planejamentos')">
+                <i>📝</i> Planejamentos
+            </div>
+            <div class="menu-item" onclick="showSection('recados')">
+                <i>📢</i> Recados
+            </div>
+            <div class="menu-item" onclick="showSection('materiais')">
+                <i>📁</i> Materiais
+            </div>
+            <div class="menu-item" onclick="showSection('escolas')">
+                <i>🏫</i> Escolas
+            </div>
+            <div class="menu-item" onclick="showSection('turmas')">
+                <i>👥</i> Turmas
+            </div>
+            <div class="menu-item" onclick="showSection('config')">
+                <i>⚙️</i> Configurações
+            </div>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h2>Dashboard</h2>
+                <div class="date">📅 24 de Fevereiro de 2026</div>
+            </div>
+
+            <!-- Seção Dashboard -->
+            <div id="dashboardSection" class="section active">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-info">
+                            <h4>Eventos essa semana</h4>
+                            <p id="eventosSemana">4</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <h4>Turmas</h4>
+                            <p id="totalTurmas">6</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-info">
+                            <h4>Planejamentos</h4>
+                            <p id="totalPlanejamentos">12</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📢</div>
+                        <div class="stat-info">
+                            <h4>Recados ativos</h4>
+                            <p id="totalRecados">3</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações Rápidas -->
+                <h3 style="margin-bottom: 1rem;">Ações Rápidas</h3>
+                <div class="quick-actions">
+                    <div class="quick-action-card" onclick="openQuickModal('horario')">
+                        <div class="quick-action-icon">⏰</div>
+                        <h4>Novo Horário</h4>
+                        <p>Adicionar horário de aula</p>
+                    </div>
+                    <div class="quick-action-card" onclick="openQuickModal('evento')">
+                        <div class="quick-action-icon">📅</div>
+                        <h4>Novo Evento</h4>
+                        <p>Prova, trabalho, reunião</p>
+                    </div>
+                    <div class="quick-action-card" onclick="openQuickModal('planejamento')">
+                        <div class="quick-action-icon">📝</div>
+                        <h4>Novo Planejamento</h4>
+                        <p>Criar plano de aula</p>
+                    </div>
+                    <div class="quick-action-card" onclick="openQuickModal('recado')">
+                        <div class="quick-action-icon">📢</div>
+                        <h4>Novo Recado</h4>
+                        <p>Aviso para os alunos</p>
+                    </div>
+                </div>
+
+                <!-- Calendário Visual -->
+                <h3 style="margin: 2rem 0 1rem;">📅 Próximos Eventos</h3>
+                <div class="form-container">
+                    <div class="calendar-visual" id="miniCalendario">
+                        <!-- Gerado via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção Horários -->
+            <div id="horariosSection" class="section">
+                <div class="form-container">
+                    <div class="form-title">
+                        <i>⏰</i> Cadastrar Novo Horário
+                    </div>
+                    <form id="horarioForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Escola</label>
+                                <select id="escolaHorario" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Ana Gondin">E.E.B. Ana Gondin</option>
+                                    <option value="Ceja">Sede Ceja Laguna</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Dia da Semana</label>
+                                <select id="diaHorario" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="segunda">Segunda-feira</option>
+                                    <option value="terca">Terça-feira</option>
+                                    <option value="quarta">Quarta-feira</option>
+                                    <option value="quinta">Quinta-feira</option>
+                                    <option value="sexta">Sexta-feira</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Turno</label>
+                                <select id="turnoHorario" required onchange="atualizarHorariosDisponiveis()">
+                                    <option value="">Selecione...</option>
+                                    <option value="manha">Manhã (07:00 - 12:00)</option>
+                                    <option value="tarde">Tarde (13:00 - 18:00)</option>
+                                    <option value="noite">Noite (19:00 - 22:30)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Horário</label>
+                                <select id="horarioSelect" required>
+                                    <option value="">Primeiro selecione o turno</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Turma</label>
+                                <select id="turmaHorario" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="3a-med">3º Ano - Médio</option>
+                                    <option value="2a-med">2º Ano - Médio</option>
+                                    <option value="1a-med">1º Ano - Médio</option>
+                                    <option value="9a-fund">9º Ano - Fundamental</option>
+                                    <option value="8a-fund">8º Ano - Fundamental</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Disciplina</label>
+                                <input type="text" id="disciplinaHorario" value="Biologia" readonly>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn" onclick="salvarHorario(event)">Salvar Horário</button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem;">📋 Horários Cadastrados</h3>
+                    <table id="tabelaHorarios">
+                        <thead>
+                            <tr>
+                                <th>Escola</th>
+                                <th>Dia</th>
+                                <th>Horário</th>
+                                <th>Turma</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="horariosBody">
+                            <!-- Dados inseridos via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Seção Eventos -->
+            <div id="eventosSection" class="section">
+                <div class="form-container">
+                    <div class="form-title">
+                        <i>📅</i> Cadastrar Evento
+                    </div>
+                    <form id="eventoForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Título do Evento</label>
+                                <input type="text" id="tituloEvento" placeholder="Ex: Prova de Genética" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Data</label>
+                                <input type="date" id="dataEvento" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Horário</label>
+                                <input type="time" id="horaEvento">
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo</label>
+                                <select id="tipoEvento" required>
+                                    <option value="prova">📝 Prova</option>
+                                    <option value="trabalho">📚 Trabalho</option>
+                                    <option value="reuniao">👥 Reunião</option>
+                                    <option value="atividade">✏️ Atividade</option>
+                                    <option value="saida">🌳 Saída de Campo</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Turma</label>
+                                <select id="turmaEvento" required>
+                                    <option value="todas">Todas as turmas</option>
+                                    <option value="3a-med">3º Ano - Médio</option>
+                                    <option value="2a-med">2º Ano - Médio</option>
+                                    <option value="1a-med">1º Ano - Médio</option>
+                                    <option value="9a-fund">9º Ano - Fundamental</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Descrição</label>
+                                <textarea id="descEvento" rows="3" placeholder="Detalhes do evento..."></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn" onclick="salvarEvento(event)">Salvar Evento</button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem;">📋 Próximos Eventos</h3>
+                    <table id="tabelaEventos">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Evento</th>
+                                <th>Tipo</th>
+                                <th>Turma</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventosBody">
+                            <!-- Dados inseridos via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Seção Planejamentos -->
+            <div id="planejamentosSection" class="section">
+                <div class="form-container">
+                    <div class="form-title">
+                        <i>📝</i> Criar Planejamento
+                    </div>
+                    <form id="planejamentoForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Título da Aula</label>
+                                <input type="text" id="tituloPlano" placeholder="Ex: Leis de Mendel" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Data</label>
+                                <input type="date" id="dataPlano" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Turma</label>
+                                <select id="turmaPlano" required>
+                                    <option value="3a-med">3º Ano - Médio</option>
+                                    <option value="2a-med">2º Ano - Médio</option>
+                                    <option value="1a-med">1º Ano - Médio</option>
+                                    <option value="9a-fund">9º Ano - Fundamental</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Horário</label>
+                                <select id="horarioPlano" required>
+                                    <option value="1a">1ª Aula (07:00-07:45)</option>
+                                    <option value="2a">2ª Aula (07:45-08:30)</option>
+                                    <option value="3a">3ª Aula (08:30-09:15)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Objetivos</label>
+                            <textarea id="objetivosPlano" rows="3" placeholder="O que os alunos devem aprender..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Conteúdo Programático</label>
+                            <textarea id="conteudoPlano" rows="5" placeholder="Detalhe o conteúdo da aula..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Atividades</label>
+                            <textarea id="atividadesPlano" rows="4" placeholder="Exercícios, trabalhos, dinâmicas..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Materiais Necessários</label>
+                            <input type="text" id="materiaisPlano" placeholder="Ex: Apostila, projetor, laboratório">
+                        </div>
+                        <button type="submit" class="btn" onclick="salvarPlanejamento(event)">Salvar Planejamento</button>
+                        <button type="button" class="btn btn-secondary" style="margin-left: 1rem;" onclick="exportarPlanejamento()">Exportar DOCX</button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem;">📋 Planejamentos Salvos</h3>
+                    <table id="tabelaPlanejamentos">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Título</th>
+                                <th>Turma</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="planejamentosBody">
+                            <!-- Dados inseridos via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Seção Recados -->
+            <div id="recadosSection" class="section">
+                <div class="form-container">
+                    <div class="form-title">
+                        <i>📢</i> Publicar Recado
+                    </div>
+                    <form id="recadoForm">
+                        <div class="form-group">
+                            <label>Título do Recado</label>
+                            <input type="text" id="tituloRecado" placeholder="Ex: Aviso importante sobre a prova" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mensagem</label>
+                            <textarea id="mensagemRecado" rows="5" placeholder="Escreva o recado completo..." required></textarea>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Data de Publicação</label>
+                                <input type="date" id="dataPublicacao" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Data de Expiração</label>
+                                <input type="date" id="dataExpiracao">
+                            </div>
+                            <div class="form-group">
+                                <label>Visibilidade</label>
+                                <select id="visibilidadeRecado">
+                                    <option value="todas">Todas as turmas</option>
+                                    <option value="3a-med">Apenas 3º Ano</option>
+                                    <option value="2a-med">Apenas 2º Ano</option>
+                                    <option value="1a-med">Apenas 1º Ano</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn" onclick="salvarRecado(event)">Publicar Recado</button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin-bottom: 1rem;">📋 Recados Ativos</h3>
+                    <table id="tabelaRecados">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Título</th>
+                                <th>Turma</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recadosBody">
+                            <!-- Dados inseridos via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para ações rápidas -->
+    <div class="modal" id="quickModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Nova Ação</h3>
+                <span class="close-modal" onclick="closeQuickModal()">&times;</span>
+            </div>
+            <div id="modalBody">
+                <!-- Conteúdo dinâmico -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados armazenados (simulando banco de dados)
+        let horarios = JSON.parse(localStorage.getItem('horarios')) || [];
+        let eventos = JSON.parse(localStorage.getItem('eventos')) || [
+            { data: '2026-02-25', titulo: 'Prova de Genética', tipo: 'prova', turma: '3a-med' },
+            { data: '2026-02-28', titulo: 'Entrega de Trabalho', tipo: 'trabalho', turma: '2a-med' },
+            { data: '2026-03-02', titulo: 'Reunião de Pais', tipo: 'reuniao', turma: 'todas' }
+        ];
+        let planejamentos = JSON.parse(localStorage.getItem('planejamentos')) || [];
+        let recados = JSON.parse(localStorage.getItem('recados')) || [];
+
+        // Função para mostrar seções
+        function showSection(section) {
+            // Atualizar menu
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.menu-item').classList.add('active');
+
+            // Esconder todas as seções
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            // Mostrar seção selecionada
+            document.getElementById(section + 'Section').classList.add('active');
+            
+            // Atualizar header
+            const titles = {
+                'dashboard': 'Dashboard',
+                'horarios': 'Gerenciar Horários',
+                'eventos': 'Gerenciar Eventos',
+                'planejamentos': 'Planejamentos de Aula',
+                'recados': 'Recados e Avisos'
+            };
+            document.querySelector('.header h2').textContent = titles[section];
+
+            // Atualizar dados da seção
+            if (section === 'horarios') atualizarTabelaHorarios();
+            if (section === 'eventos') atualizarTabelaEventos();
+            if (section === 'planejamentos') atualizarTabelaPlanejamentos();
+            if (section === 'recados') atualizarTabelaRecados();
+        }
+
+        // Funções para Horários
+        function atualizarHorariosDisponiveis() {
+            const turno = document.getElementById('turnoHorario').value;
+            const select = document.getElementById('horarioSelect');
+            
+            let horarios = [];
+            if (turno === 'manha') {
+                horarios = ['07:00', '07:45', '08:30', '09:15', '10:00', '10:45', '11:30'];
+            } else if (turno === 'tarde') {
+                horarios = ['13:00', '13:45', '14:30', '15:15', '16:00', '16:45', '17:30'];
+            } else if (turno === 'noite') {
+                horarios = ['19:00', '19:45', '20:30', '21:15', '22:00'];
+            }
+
+            select.innerHTML = '<option value="">Selecione o horário</option>';
+            horarios.forEach(h => {
+                select.innerHTML += `<option value="${h}">${h}</option>`;
+            });
+        }
+
+        function salvarHorario(event) {
+            event.preventDefault();
+            
+            const horario = {
+                id: Date.now(),
+                escola: document.getElementById('escolaHorario').value,
+                dia: document.getElementById('diaHorario').value,
+                horario: document.getElementById('horarioSelect').value,
+                turma: document.getElementById('turmaHorario').value,
+                disciplina: 'Biologia'
+            };
+
+            horarios.push(horario);
+            localStorage.setItem('horarios', JSON.stringify(horarios));
+            
+            alert('Horário salvo com sucesso!');
+            document.getElementById('horarioForm').reset();
+            atualizarTabelaHorarios();
+        }
+
+        function atualizarTabelaHorarios() {
+            const tbody = document.getElementById('horariosBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            horarios.forEach(h => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${h.escola === 'ana' ? 'E.E.B. Ana Gondin' : h.escola === 'Ana Gondin' ? 'E.E.B. Ana Gondin' : 'E.E.B. Ceja Laguna'}</td>
+                    <td>${h.dia}</td>
+                    <td>${h.horario}</td>
+                    <td>${h.turma}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editarHorario(${h.id})">✏️</button>
+                        <button class="action-btn delete-btn" onclick="excluirHorario(${h.id})">🗑️</button>
+                    </td>
+                `;
+            });
+        }
+
+        function excluirHorario(id) {
+            if (confirm('Tem certeza que deseja excluir este horário?')) {
+                horarios = horarios.filter(h => h.id !== id);
+                localStorage.setItem('horarios', JSON.stringify(horarios));
+                atualizarTabelaHorarios();
+            }
+        }
+
+        // Funções para Eventos
+        function salvarEvento(event) {
+            event.preventDefault();
+            
+            const evento = {
+                id: Date.now(),
+                titulo: document.getElementById('tituloEvento').value,
+                data: document.getElementById('dataEvento').value,
+                hora: document.getElementById('horaEvento').value,
+                tipo: document.getElementById('tipoEvento').value,
+                turma: document.getElementById('turmaEvento').value,
+                descricao: document.getElementById('descEvento').value
+            };
+
+            eventos.push(evento);
+            localStorage.setItem('eventos', JSON.stringify(eventos));
+            
+            alert('Evento salvo com sucesso!');
+            document.getElementById('eventoForm').reset();
+            atualizarTabelaEventos();
+            atualizarCalendario();
+        }
+
+        function atualizarTabelaEventos() {
+            const tbody = document.getElementById('eventosBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            eventos.sort((a, b) => new Date(a.data) - new Date(b.data)).forEach(e => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${new Date(e.data).toLocaleDateString('pt-BR')}</td>
+                    <td><strong>${e.titulo}</strong></td>
+                    <td>${getTipoEvento(e.tipo)}</td>
+                    <td>${getNomeTurma(e.turma)}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editarEvento(${e.id})">✏️</button>
+                        <button class="action-btn delete-btn" onclick="excluirEvento(${e.id})">🗑️</button>
+                    </td>
+                `;
+            });
+        }
+
+        function excluirEvento(id) {
+            if (confirm('Tem certeza que deseja excluir este evento?')) {
+                eventos = eventos.filter(e => e.id !== id);
+                localStorage.setItem('eventos', JSON.stringify(eventos));
+                atualizarTabelaEventos();
+                atualizarCalendario();
+            }
+        }
+
+        // Funções para Planejamentos
+        function salvarPlanejamento(event) {
+            event.preventDefault();
+            
+            const planejamento = {
+                id: Date.now(),
+                titulo: document.getElementById('tituloPlano').value,
+                data: document.getElementById('dataPlano').value,
+                turma: document.getElementById('turmaPlano').value,
+                horario: document.getElementById('horarioPlano').value,
+                objetivos: document.getElementById('objetivosPlano').value,
+                conteudo: document.getElementById('conteudoPlano').value,
+                atividades: document.getElementById('atividadesPlano').value,
+                materiais: document.getElementById('materiaisPlano').value
+            };
+
+            planejamentos.push(planejamento);
+            localStorage.setItem('planejamentos', JSON.stringify(planejamentos));
+            
+            alert('Planejamento salvo com sucesso!');
+            document.getElementById('planejamentoForm').reset();
+            atualizarTabelaPlanejamentos();
+        }
+
+        function atualizarTabelaPlanejamentos() {
+            const tbody = document.getElementById('planejamentosBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            planejamentos.forEach(p => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${new Date(p.data).toLocaleDateString('pt-BR')}</td>
+                    <td>${p.titulo}</td>
+                    <td>${getNomeTurma(p.turma)}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editarPlanejamento(${p.id})">✏️</button>
+                        <button class="action-btn" onclick="exportarPlanejamento(${p.id})">📄</button>
+                        <button class="action-btn delete-btn" onclick="excluirPlanejamento(${p.id})">🗑️</button>
+                    </td>
+                `;
+            });
+        }
+
+        function excluirPlanejamento(id) {
+            if (confirm('Tem certeza que deseja excluir este planejamento?')) {
+                planejamentos = planejamentos.filter(p => p.id !== id);
+                localStorage.setItem('planejamentos', JSON.stringify(planejamentos));
+                atualizarTabelaPlanejamentos();
+            }
+        }
+
+        function exportarPlanejamento(id) {
+            let planejamento;
+            if (id) {
+                planejamento = planejamentos.find(p => p.id === id);
+            } else {
+                // Pega do formulário atual
+                planejamento = {
+                    titulo: document.getElementById('tituloPlano').value,
+                    data: document.getElementById('dataPlano').value,
+                    objetivos: document.getElementById('objetivosPlano').value,
+                    conteudo: document.getElementById('conteudoPlano').value,
+                    atividades: document.getElementById('atividadesPlano').value,
+                    materiais: document.getElementById('materiaisPlano').value
+                };
+            }
+
+            if (planejamento && planejamento.titulo) {
+                const conteudo = `
+                    PLANEJAMENTO DE AULA - BIOLOGIA
+                    Professor: Lafaiete Erkmann
+                    Data: ${new Date(planejamento.data).toLocaleDateString('pt-BR')}
+                    
+                    TÍTULO: ${planejamento.titulo}
+                    
+                    OBJETIVOS:
+                    ${planejamento.objetivos || ''}
+                    
+                    CONTEÚDO PROGRAMÁTICO:
+                    ${planejamento.conteudo || ''}
+                    
+                    ATIVIDADES:
+                    ${planejamento.atividades || ''}
+                    
+                    MATERIAIS NECESSÁRIOS:
+                    ${planejamento.materiais || ''}
+                    
+                    ---
+                    Prof. Lafaiete Erkmann
+                    lafaietep@gmail.com | @lafa.bio
+                `;
+
+                const blob = new Blob([conteudo], { type: 'application/msword' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${planejamento.titulo.replace(/\s+/g, '_')}.docx`;
+                link.click();
+            }
+        }
+
+        // Funções para Recados
+        function salvarRecado(event) {
+            event.preventDefault();
+            
+            const recado = {
+                id: Date.now(),
+                titulo: document.getElementById('tituloRecado').value,
+                mensagem: document.getElementById('mensagemRecado').value,
+                dataPublicacao: document.getElementById('dataPublicacao').value,
+                dataExpiracao: document.getElementById('dataExpiracao').value,
+                visibilidade: document.getElementById('visibilidadeRecado').value
+            };
+
+            recados.push(recado);
+            localStorage.setItem('recados', JSON.stringify(recados));
+            
+            alert('Recado publicado com sucesso!');
+            document.getElementById('recadoForm').reset();
+            atualizarTabelaRecados();
+        }
+
+        function atualizarTabelaRecados() {
+            const tbody = document.getElementById('recadosBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            recados.forEach(r => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${new Date(r.dataPublicacao).toLocaleDateString('pt-BR')}</td>
+                    <td><strong>${r.titulo}</strong></td>
+                    <td>${r.visibilidade === 'todas' ? 'Todas' : getNomeTurma(r.visibilidade)}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editarRecado(${r.id})">✏️</button>
+                        <button class="action-btn delete-btn" onclick="excluirRecado(${r.id})">🗑️</button>
+                    </td>
+                `;
+            });
+        }
+
+        function excluirRecado(id) {
+            if (confirm('Tem certeza que deseja excluir este recado?')) {
+                recados = recados.filter(r => r.id !== id);
+                localStorage.setItem('recados', JSON.stringify(recados));
+                atualizarTabelaRecados();
+            }
+        }
+
+        // Funções auxiliares
+        function getTipoEvento(tipo) {
+            const tipos = {
+                'prova': '📝 Prova',
+                'trabalho': '📚 Trabalho',
+                'reuniao': '👥 Reunião',
+                'atividade': '✏️ Atividade',
+                'saida': '🌳 Saída de Campo'
+            };
+            return tipos[tipo] || tipo;
+        }
+
+        function getNomeTurma(turma) {
+            const turmas = {
+                'todas': 'Todas',
+                '3a-med': '3º Ano Médio',
+                '2a-med': '2º Ano Médio',
+                '1a-med': '1º Ano Médio',
+                '9a-fund': '9º Ano Fundamental',
+                '8a-fund': '8º Ano Fundamental'
+            };
+            return turmas[turma] || turma;
+        }
+
+        // Atualizar calendário
+        function atualizarCalendario() {
+            const calendario = document.getElementById('miniCalendario');
+            if (!calendario) return;
+
+            const hoje = new Date();
+            const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            
+            calendario.innerHTML = '';
+            
+            // Cabeçalho dos dias
+            diasSemana.forEach(dia => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = dia;
+                calendario.appendChild(header);
+            });
+
+            // Dias do mês (simplificado - mostrando apenas próximos 7 dias)
+            for (let i = 0; i < 7; i++) {
+                const data = new Date(hoje);
+                data.setDate(hoje.getDate() + i);
+                
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'calendar-day' + (i === 0 ? ' today' : '');
+                
+                dayDiv.innerHTML = `<div class="calendar-day-number">${data.getDate()}</div>`;
+                
+                // Adicionar eventos
+                eventos.forEach(evento => {
+                    const dataEvento = new Date(evento.data);
+                    if (dataEvento.toDateString() === data.toDateString()) {
+                        dayDiv.innerHTML += `<div class="calendar-event" onclick="verEvento('${evento.titulo}')">${evento.titulo}</div>`;
+                    }
+                });
+                
+                calendario.appendChild(dayDiv);
+            }
+        }
+
+        // Modal para ações rápidas
+        function openQuickModal(tipo) {
+            const modal = document.getElementById('quickModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+
+            let titulo, conteudo;
+            
+            if (tipo === 'horario') {
+                titulo = 'Novo Horário';
+                conteudo = `
+                    <form>
+                        <div class="form-group">
+                            <label>Escola</label>
+                            <select class="form-control">
+                                <option>E.E.B. Ana Gondin</option>
+                                <option>E.E.B. Ceja Laguna</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Dia</label>
+                            <select class="form-control">
+                                <option>Segunda</option>
+                                <option>Terça</option>
+                                <option>Quarta</option>
+                                <option>Quinta</option>
+                                <option>Sexta</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Horário</label>
+                            <input type="time" class="form-control">
+                        </div>
+                        <button class="btn" style="margin-top: 1rem;">Salvar</button>
+                    </form>
+                `;
+            } else if (tipo === 'evento') {
+                titulo = 'Novo Evento';
+                conteudo = `
+                    <form>
+                        <div class="form-group">
+                            <label>Título</label>
+                            <input type="text" class="form-control" placeholder="Ex: Prova de Genética">
+                        </div>
+                        <div class="form-group">
+                            <label>Data</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <button class="btn" style="margin-top: 1rem;">Salvar</button>
+                    </form>
+                `;
+            }
+
+            modalTitle.textContent = titulo;
+            modalBody.innerHTML = conteudo;
+            modal.classList.add('active');
+        }
+
+        function closeQuickModal() {
+            document.getElementById('quickModal').classList.remove('active');
+        }
+
+        function verEvento(titulo) {
+            alert(`Evento: ${titulo}`);
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            atualizarTabelaHorarios();
+            atualizarTabelaEventos();
+            atualizarTabelaPlanejamentos();
+            atualizarTabelaRecados();
+            atualizarCalendario();
+
+            // Atualizar contadores
+            document.getElementById('eventosSemana').textContent = eventos.length;
+            document.getElementById('totalPlanejamentos').textContent = planejamentos.length;
+            document.getElementById('totalRecados').textContent = recados.length;
+        });
+    </script>
+</body>
+</html>
